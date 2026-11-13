@@ -153,23 +153,20 @@ public class MainGUI extends JFrame implements ActionListener {
 		// Tạo các màn hình tạm thời
 		JPanel pTrangChu = new JPanel();
 		JPanel pSanPham = new JPanel();
-//		JPanel pBanHang = new JPanel();
 		BanHangGUI banHangGUI = new BanHangGUI();
-		JPanel pHoaDon = new JPanel();
+		HoaDonGUI hoaDonGUI = new HoaDonGUI();
 		NhanVienGUI nhanVienGUI = new NhanVienGUI();
 
 		// Thiết lập màu nền
 		pTrangChu.setBackground(new Color(243, 246, 252));
 		pSanPham.setBackground(Color.RED);
-//		pBanHang.setBackground(Color.BLUE);
-		pHoaDon.setBackground(Color.CYAN);
 
 		// Thêm các màn hình vào CardLayout
 		pContent.add(pTrangChu, "TRANG_CHU");
 		pContent.add(nhanVienGUI, "NHAN_VIEN");
 		pContent.add(pSanPham, "SAN_PHAM");
 		pContent.add(banHangGUI, "BAN_HANG");
-		pContent.add(pHoaDon, "HOA_DON");
+		pContent.add(hoaDonGUI, "HOA_DON");
 
 		// Đưa Content Panel vào pMain
 		pMain.add(pContent, BorderLayout.CENTER);

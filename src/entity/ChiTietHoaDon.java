@@ -1,20 +1,30 @@
 package entity;
 
-public class ChiTietHoaDon {
+import java.util.Objects;
 
+public class ChiTietHoaDon {
 	private HoaDon hoaDon;
 	private SanPham sanPham;
 	private int soLuong;
 	private double donGia;
 
 	public ChiTietHoaDon() {
+		this.soLuong = 1;
+		this.donGia = 0.0;
 	}
 
-	public ChiTietHoaDon(HoaDon hoaDon, SanPham sanPham, int soLuong, double donGia) {
-		setHoaDon(hoaDon);
+	public ChiTietHoaDon(SanPham sanPham, int soLuong, double donGia) {
+		this();
 		setSanPham(sanPham);
 		setSoLuong(soLuong);
 		setDonGia(donGia);
+	}
+
+	public ChiTietHoaDon(HoaDon hoaDon, SanPham sanPham, int soLuong, double donGia) {
+		this.sanPham = sanPham;
+		this.soLuong = soLuong;
+		this.donGia = donGia;
+		setHoaDon(hoaDon);
 	}
 
 	public HoaDon getHoaDon() {
@@ -61,13 +71,37 @@ public class ChiTietHoaDon {
 		this.donGia = donGia;
 	}
 
+	public double getThanhTien() {
+		return tinhThanhTien();
+	}
+
 	public double tinhThanhTien() {
 		return soLuong * donGia;
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(hoaDon, sanPham);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ChiTietHoaDon other = (ChiTietHoaDon) obj;
+		return Objects.equals(hoaDon, other.hoaDon) && Objects.equals(sanPham, other.sanPham);
+	}
+
+	@Override
 	public String toString() {
-		return "ChiTietHoaDon [maHD=" + hoaDon.getMaHD() + ", maSP=" + sanPham.getMaSP() + ", soLuong=" + soLuong
-				+ ", donGia=" + donGia + ", thanhTien=" + tinhThanhTien() + "]";
+		return "ChiTietHoaDon [hoaDon=" + hoaDon + ", sanPham=" + sanPham + ", soLuong=" + soLuong + ", donGia="
+				+ donGia + "]";
 	}
 }

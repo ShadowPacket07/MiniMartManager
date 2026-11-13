@@ -5,13 +5,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 import dao.NhanVienDAO;
-import dao.TaiKhoanDAO;
 import entity.NhanVien;
 
 public class NhanVienBUS {
 	private TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
 	private NhanVienDAO nhanVienDAO = new NhanVienDAO();
-	private TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
+//	private TaiKhoanDAO taiKhoanDAO = new TaiKhoanDAO();
 
 	public boolean themNhanVien(NhanVien nv) throws SQLException {
 
