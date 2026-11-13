@@ -1,23 +1,43 @@
 package gui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 public class BanHangGUI extends JPanel {
 	private static final long serialVersionUID = 1L;
-	
+
 	private JPanel pDanhSachSP, pGioHang;
 	private JLabel lblTongTien, lblSoSanPham;
 	// private JTextField txtTimKiem, txtMaKhach;
 	// private JRadioButton rdoVangLai, rdoKhachHang;
 	private JTextField txtTimKiem;
-	
+
 	private double tongTien = 0;
 	private int tongSoLuong = 0;
 
@@ -33,16 +53,11 @@ public class BanHangGUI extends JPanel {
 	private Color xanhLaColor = new Color(22, 163, 74);
 	private Color doColor = new Color(220, 38, 38);
 
-	private Object[][] dsSanPham = {
-			{ "SP001", "Nước khoáng Lavie 500ml", 6000.0, 45 },
-			{ "SP002", "Mì ly Hảo Hảo Tôm Chua Cay", 9500.0, 60 },
-			{ "SP003", "Sữa tươi Vinamilk 180ml", 8500.0, 32 },
-			{ "SP004", "Snack Khoai Tây Lay's", 14000.0, 25 },
-			{ "SP005", "Trà Ô Long Tea+ Plus", 11000.0, 40 },
-			{ "SP006", "Bánh Mì Tươi Kinh Đô", 12000.0, 18 },
-			{ "SP007", "Cà phê lon Highlands", 16000.0, 30 },
-			{ "SP008", "Xúc xích tiệt trùng Vissan", 10000.0, 50 },
-			{ "SP009", "Nước tăng lực RedBull", 15000.0, 80 } };
+	private Object[][] dsSanPham = { { "SP001", "Nước khoáng Lavie 500ml", 6000.0, 45 },
+			{ "SP002", "Mì ly Hảo Hảo Tôm Chua Cay", 9500.0, 60 }, { "SP003", "Sữa tươi Vinamilk 180ml", 8500.0, 32 },
+			{ "SP004", "Snack Khoai Tây Lay's", 14000.0, 25 }, { "SP005", "Trà Ô Long Tea+ Plus", 11000.0, 40 },
+			{ "SP006", "Bánh Mì Tươi Kinh Đô", 12000.0, 18 }, { "SP007", "Cà phê lon Highlands", 16000.0, 30 },
+			{ "SP008", "Xúc xích tiệt trùng Vissan", 10000.0, 50 }, { "SP009", "Nước tăng lực RedBull", 15000.0, 80 } };
 
 	public BanHangGUI() {
 		setLayout(new BorderLayout(15, 0));
@@ -54,6 +69,7 @@ public class BanHangGUI extends JPanel {
 		hienThiSanPham("");
 	}
 
+	@SuppressWarnings("unused")
 	private void taoKhuVucSanPham() {
 		JPanel pTrai = new JPanel(new BorderLayout(0, 12));
 		pTrai.setBackground(nenColor);
@@ -69,10 +85,11 @@ public class BanHangGUI extends JPanel {
 		JButton btnTimKiem = taoNut("Tìm kiếm", primaryColor, Color.WHITE, 100, 34);
 		JButton btnLamMoi = taoNut("Làm mới", new Color(241, 245, 249), textColor, 85, 34);
 		btnLamMoi.setBorder(new LineBorder(vienColor, 1, true));
-
+		// khai báo e lambda mà không sài
 		ActionListener timKiem = e -> hienThiSanPham(txtTimKiem.getText());
 		btnTimKiem.addActionListener(timKiem);
 		txtTimKiem.addActionListener(timKiem);
+
 		btnLamMoi.addActionListener(e -> {
 			txtTimKiem.setText("");
 			hienThiSanPham("");
@@ -138,6 +155,7 @@ public class BanHangGUI extends JPanel {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void taoTheSanPham(String ma, String ten, double gia, int ton) {
 		JPanel the = new JPanel(new BorderLayout(0, 8));
 		the.setBackground(theColor);
@@ -156,7 +174,7 @@ public class BanHangGUI extends JPanel {
 		pGiaTon.setBackground(theColor);
 		pGiaTon.add(taoLabel(String.format("%,.0f đ", gia), 14, true, primaryColor), BorderLayout.WEST);
 		pGiaTon.add(taoLabel("Tồn: " + ton, 12, false, secondaryColor), BorderLayout.EAST);
-
+		// khai báo e mà không sài
 		JButton btnThem = taoNut("+ Thêm vào giỏ", primaryColor, Color.WHITE, 0, 32);
 		btnThem.addActionListener(e -> themVaoGio(ma, ten, gia));
 
@@ -171,6 +189,7 @@ public class BanHangGUI extends JPanel {
 		pDanhSachSP.add(the);
 	}
 
+	@SuppressWarnings("unused")
 	private void taoKhuVucGioHang() {
 		JPanel pPhai = new JPanel(new BorderLayout());
 		pPhai.setBackground(theColor);
@@ -179,8 +198,8 @@ public class BanHangGUI extends JPanel {
 
 		JPanel pHead = new JPanel(new BorderLayout());
 		pHead.setBackground(theColor);
-		pHead.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createMatteBorder(0, 0, 1, 0, vienColor), new EmptyBorder(14, 15, 14, 15)));
+		pHead.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, vienColor),
+				new EmptyBorder(14, 15, 14, 15)));
 		lblSoSanPham = taoLabel("0 sản phẩm", 13, false, secondaryColor);
 		pHead.add(taoLabel("Giỏ hàng", 16, true, textColor), BorderLayout.WEST);
 		pHead.add(lblSoSanPham, BorderLayout.EAST);
@@ -199,9 +218,9 @@ public class BanHangGUI extends JPanel {
 		// rdoVangLai = new JRadioButton("Khách vãng lai", true);
 		// rdoKhachHang = new JRadioButton("Khách hàng");
 		// for (JRadioButton rdo : new JRadioButton[] { rdoVangLai, rdoKhachHang }) {
-		// 	rdo.setBackground(theColor);
-		// 	rdo.setForeground(textColor);
-		// 	rdo.setFont(new Font("Arial", Font.PLAIN, 13));
+		// rdo.setBackground(theColor);
+		// rdo.setForeground(textColor);
+		// rdo.setFont(new Font("Arial", Font.PLAIN, 13));
 		// }
 		// ButtonGroup nhomKhach = new ButtonGroup();
 		// nhomKhach.add(rdoVangLai);
@@ -213,12 +232,12 @@ public class BanHangGUI extends JPanel {
 		// txtMaKhach.setEnabled(false);
 
 		// rdoVangLai.addActionListener(e -> {
-		// 	txtMaKhach.setText("");
-		// 	txtMaKhach.setEnabled(false);
+		// txtMaKhach.setText("");
+		// txtMaKhach.setEnabled(false);
 		// });
 		// rdoKhachHang.addActionListener(e -> {
-		// 	txtMaKhach.setEnabled(true);
-		// 	txtMaKhach.requestFocus();
+		// txtMaKhach.setEnabled(true);
+		// txtMaKhach.requestFocus();
 		// });
 
 		// JPanel pRadio = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -244,31 +263,33 @@ public class BanHangGUI extends JPanel {
 		btnLamMoiGio.setBorder(new LineBorder(new Color(254, 202, 202), 1, true));
 
 		// btnThanhToan.addActionListener(e -> {
-		// 	if (dsNutCong.isEmpty()) {
-		// 		JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
-		// 	} else if (rdoKhachHang.isSelected() && txtMaKhach.getText().trim().isEmpty()) {
-		// 		JOptionPane.showMessageDialog(this, "Vui lòng nhập mã hoặc SĐT khách hàng!");
-		// 	} else {
-		// 		String khach = "Khách vãng lai";
-		// 		if (rdoKhachHang.isSelected()) {
-		// 			khach = "Khách hàng: " + txtMaKhach.getText().trim();
-		// 		}
-		// 		JOptionPane.showMessageDialog(this,
-		// 				"Thanh toán thành công!\n" + khach + "\nTổng thu: " + lblTongTien.getText());
-		// 		xoaGioHang();
-		// 	}
+		// if (dsNutCong.isEmpty()) {
+		// JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
+		// } else if (rdoKhachHang.isSelected() &&
+		// txtMaKhach.getText().trim().isEmpty()) {
+		// JOptionPane.showMessageDialog(this, "Vui lòng nhập mã hoặc SĐT khách hàng!");
+		// } else {
+		// String khach = "Khách vãng lai";
+		// if (rdoKhachHang.isSelected()) {
+		// khach = "Khách hàng: " + txtMaKhach.getText().trim();
+		// }
+		// JOptionPane.showMessageDialog(this,
+		// "Thanh toán thành công!\n" + khach + "\nTổng thu: " + lblTongTien.getText());
+		// xoaGioHang();
+		// }
 		// });
+
+		// khai báo e mà không sài
 		btnThanhToan.addActionListener(e -> {
-    if (dsNutCong.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
-    } else {
-        JOptionPane.showMessageDialog(this,
-                "Thanh toán thành công!\nKhách hàng: Khách vãng lai"
-                + "\nTổng thu: " + lblTongTien.getText());
-        xoaGioHang();
-    }
-});
-		
+			if (dsNutCong.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"Thanh toán thành công!\nKhách hàng: Khách vãng lai" + "\nTổng thu: " + lblTongTien.getText());
+				xoaGioHang();
+			}
+		});
+
 		btnLamMoiGio.addActionListener(e -> xoaGioHang());
 
 		JPanel pNut = new JPanel(new BorderLayout(0, 8));
@@ -278,8 +299,8 @@ public class BanHangGUI extends JPanel {
 
 		JPanel pFoot = new JPanel(new BorderLayout(0, 12));
 		pFoot.setBackground(theColor);
-		pFoot.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createMatteBorder(1, 0, 0, 0, vienColor), new EmptyBorder(12, 15, 12, 15)));
+		pFoot.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, vienColor),
+				new EmptyBorder(12, 15, 12, 15)));
 		// pFoot.add(pKhach, BorderLayout.NORTH);
 		pFoot.add(pTong, BorderLayout.CENTER);
 		pFoot.add(pNut, BorderLayout.SOUTH);
@@ -290,6 +311,7 @@ public class BanHangGUI extends JPanel {
 		add(pPhai, BorderLayout.EAST);
 	}
 
+	@SuppressWarnings("unused")
 	private void themVaoGio(String ma, String ten, double gia) {
 		// đã có trong giỏ thì bấm nút + của dòng đó
 		if (dsNutCong.containsKey(ma)) {
@@ -343,14 +365,14 @@ public class BanHangGUI extends JPanel {
 		// dùng mảng 1 phần tử để lambda sửa được số lượng
 		int[] soLuong = { 1 };
 		Component khoangCach = Box.createVerticalStrut(8);
-
+		// khai báo e mà không sài
 		btnCong.addActionListener(e -> {
 			soLuong[0]++;
 			lblSL.setText(String.valueOf(soLuong[0]));
 			lblThanhTien.setText(String.format("%,.0f đ", soLuong[0] * gia));
 			capNhatTong(gia, 1);
 		});
-
+		// khai báo e mà không sài
 		btnTru.addActionListener(e -> {
 			if (soLuong[0] > 1) {
 				soLuong[0]--;
@@ -359,7 +381,7 @@ public class BanHangGUI extends JPanel {
 				capNhatTong(-gia, -1);
 			}
 		});
-
+		// khai báo e mà không sài
 		btnXoa.addActionListener(e -> {
 			dsNutCong.remove(ma);
 			pGioHang.remove(dong);

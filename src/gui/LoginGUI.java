@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class LoginGUI extends JFrame implements ActionListener {
+	private static final long serialVersionUID = 1L;
 
 	// ===== KHAI BÁO THUỘC TÍNH =====
 

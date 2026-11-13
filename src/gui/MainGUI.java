@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 public class MainGUI extends JFrame implements ActionListener {
+	private static final long serialVersionUID = 1L;
 	// Màu sắc giao diện
 	private Color sidebarColor = new Color(21, 94, 239);
 
@@ -151,21 +152,22 @@ public class MainGUI extends JFrame implements ActionListener {
 		// Tạo các màn hình tạm thời
 		JPanel pTrangChu = new JPanel();
 		JPanel pSanPham = new JPanel();
-		JPanel pBanHang = new JPanel();
+//		JPanel pBanHang = new JPanel();
+		BanHangGUI banHangGUI = new BanHangGUI();
 		JPanel pHoaDon = new JPanel();
 		NhanVienGUI nhanVienGUI = new NhanVienGUI();
 
 		// Thiết lập màu nền
 		pTrangChu.setBackground(new Color(243, 246, 252));
 		pSanPham.setBackground(Color.RED);
-		pBanHang.setBackground(Color.BLUE);
+//		pBanHang.setBackground(Color.BLUE);
 		pHoaDon.setBackground(Color.CYAN);
 
 		// Thêm các màn hình vào CardLayout
 		pContent.add(pTrangChu, "TRANG_CHU");
 		pContent.add(nhanVienGUI, "NHAN_VIEN");
 		pContent.add(pSanPham, "SAN_PHAM");
-		pContent.add(pBanHang, "BAN_HANG");
+		pContent.add(banHangGUI, "BAN_HANG");
 		pContent.add(pHoaDon, "HOA_DON");
 
 		// Đưa Content Panel vào pMain
@@ -189,7 +191,6 @@ public class MainGUI extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		Object o = e.getSource();
 		if (o == btnTrangChu) {
 			cardLayout.show(pContent, "TRANG_CHU");
