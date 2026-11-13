@@ -12,7 +12,6 @@ import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -34,8 +33,7 @@ public class BanHangGUI extends JPanel {
 
 	private JPanel pDanhSachSP, pGioHang;
 	private JLabel lblTongTien, lblSoSanPham;
-	// private JTextField txtTimKiem, txtMaKhach;
-	// private JRadioButton rdoVangLai, rdoKhachHang;
+
 	private JTextField txtTimKiem;
 
 	private double tongTien = 0;
@@ -214,42 +212,6 @@ public class BanHangGUI extends JPanel {
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setBorder(null);
 
-		// // chọn khách hàng
-		// rdoVangLai = new JRadioButton("Khách vãng lai", true);
-		// rdoKhachHang = new JRadioButton("Khách hàng");
-		// for (JRadioButton rdo : new JRadioButton[] { rdoVangLai, rdoKhachHang }) {
-		// rdo.setBackground(theColor);
-		// rdo.setForeground(textColor);
-		// rdo.setFont(new Font("Arial", Font.PLAIN, 13));
-		// }
-		// ButtonGroup nhomKhach = new ButtonGroup();
-		// nhomKhach.add(rdoVangLai);
-		// nhomKhach.add(rdoKhachHang);
-
-		// txtMaKhach = new JTextField();
-		// txtMaKhach.setFont(new Font("Arial", Font.PLAIN, 13));
-		// txtMaKhach.setBorder(taoVien(4, 8, 4, 8));
-		// txtMaKhach.setEnabled(false);
-
-		// rdoVangLai.addActionListener(e -> {
-		// txtMaKhach.setText("");
-		// txtMaKhach.setEnabled(false);
-		// });
-		// rdoKhachHang.addActionListener(e -> {
-		// txtMaKhach.setEnabled(true);
-		// txtMaKhach.requestFocus();
-		// });
-
-		// JPanel pRadio = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-		// pRadio.setBackground(theColor);
-		// pRadio.add(rdoVangLai);
-		// pRadio.add(rdoKhachHang);
-
-		// JPanel pKhach = new JPanel(new GridLayout(3, 1, 0, 4));
-		// pKhach.setBackground(theColor);
-		// pKhach.add(taoLabel("Khách hàng", 13, true, textColor));
-		// pKhach.add(pRadio);
-		// pKhach.add(txtMaKhach);
 
 		JPanel pTong = new JPanel(new BorderLayout());
 		pTong.setBackground(new Color(240, 253, 244));
@@ -262,24 +224,7 @@ public class BanHangGUI extends JPanel {
 		JButton btnLamMoiGio = taoNut("Làm mới giỏ hàng", new Color(254, 242, 242), doColor, 0, 32);
 		btnLamMoiGio.setBorder(new LineBorder(new Color(254, 202, 202), 1, true));
 
-		// btnThanhToan.addActionListener(e -> {
-		// if (dsNutCong.isEmpty()) {
-		// JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
-		// } else if (rdoKhachHang.isSelected() &&
-		// txtMaKhach.getText().trim().isEmpty()) {
-		// JOptionPane.showMessageDialog(this, "Vui lòng nhập mã hoặc SĐT khách hàng!");
-		// } else {
-		// String khach = "Khách vãng lai";
-		// if (rdoKhachHang.isSelected()) {
-		// khach = "Khách hàng: " + txtMaKhach.getText().trim();
-		// }
-		// JOptionPane.showMessageDialog(this,
-		// "Thanh toán thành công!\n" + khach + "\nTổng thu: " + lblTongTien.getText());
-		// xoaGioHang();
-		// }
-		// });
-
-		// khai báo e mà không sài
+		
 		btnThanhToan.addActionListener(e -> {
 			if (dsNutCong.isEmpty()) {
 				JOptionPane.showMessageDialog(this, "Giỏ hàng đang trống!");
