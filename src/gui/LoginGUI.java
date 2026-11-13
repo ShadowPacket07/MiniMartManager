@@ -177,7 +177,6 @@ public class LoginGUI extends JFrame implements ActionListener {
 
 		pRight.add(Box.createVerticalStrut(20));
 		pRight.add(btnLogin);
-
 		// ===== THÊM HAI PANEL VÀO FRAME =====
 
 		add(pLeft);

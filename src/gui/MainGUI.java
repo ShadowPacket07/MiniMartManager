@@ -60,7 +60,8 @@ public class MainGUI extends JFrame implements ActionListener {
 		pSidebar.setPreferredSize(new Dimension(240, 750));
 		pSidebar.setLayout(new BoxLayout(pSidebar, BoxLayout.Y_AXIS));
 
-		ImageIcon orginalIcon = new ImageIcon(getClass().getResource("/images/minimart_logo.png"));
+		ImageIcon orginalIcon = new ImageIcon("C:/Users/My Computer/eclipse-workspace/MiniMartManager/imgs/logo.png");
+
 		Image scaledImage = orginalIcon.getImage().getScaledInstance(190, 137, Image.SCALE_SMOOTH);
 
 		JLabel lblLogo = new JLabel(new ImageIcon(scaledImage));
