@@ -1,4 +1,3 @@
-
 package entity;
 
 import java.time.LocalDate;
@@ -19,7 +18,6 @@ public class NhanVien {
 
 	public NhanVien(String maNhanVien, String hoTen, String soDienThoai, String diaChi, String email, double tienLuong,
 			LocalDate ngaySinh, String gioiTinh) {
-
 		this.maNhanVien = maNhanVien;
 		this.hoTen = hoTen;
 		this.soDienThoai = soDienThoai;
