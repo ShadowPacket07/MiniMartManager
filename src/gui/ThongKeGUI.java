@@ -1,11 +1,14 @@
 package gui;
 
+import bus.ThongKeBUS;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.sql.SQLException;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -36,10 +39,7 @@ public class ThongKeGUI extends JPanel {
 	private Color xanhLaColor = new Color(22, 163, 74);
 	private Color camColor = new Color(234, 88, 12);
 
-	// dữ liệu mẫu: mã SP, tên SP, số lượng đã bán
-	private Object[][] dsBanChay = { { "SP009", "Nước tăng lực RedBull", 128 },
-			{ "SP001", "Nước khoáng Lavie 500ml", 115 }, { "SP002", "Mì ly Hảo Hảo Tôm Chua Cay", 97 },
-			{ "SP007", "Cà phê lon Highlands", 74 }, { "SP003", "Sữa tươi Vinamilk 180ml", 61 } };
+	private ThongKeBUS thongKeBUS = new ThongKeBUS();
 
 	public ThongKeGUI() {
 		setLayout(new BorderLayout(0, 15));
@@ -134,13 +134,9 @@ public class ThongKeGUI extends JPanel {
 		add(pTieuDe, BorderLayout.NORTH);
 		add(pGiua, BorderLayout.CENTER);
 
-		// bấm làm mới thì nạp lại số liệu (sau này gọi DAO ở đây)
-		btnLamMoi.addActionListener(e -> {
-			napDuLieuMau();
-			JOptionPane.showMessageDialog(this, "Đã cập nhật số liệu thống kê!");
-		});
+		btnLamMoi.addActionListener(e -> napDuLieu());
 
-		napDuLieuMau();
+		napDuLieu();
 	}
 
 	private JPanel taoTheSoLieu(String tieuDe, JLabel lblGiaTri, Color mau) {
@@ -160,14 +156,20 @@ public class ThongKeGUI extends JPanel {
 		return the;
 	}
 
-	private void napDuLieuMau() {
-		lblDoanhThu.setText(String.format("%,.0f đ", 12450000.0));
-		lblSoHoaDon.setText("86");
-		lblSoSanPham.setText("475");
+	private void napDuLieu() {
+		try {
+			lblDoanhThu.setText(String.format("%,.0f đ", thongKeBUS.tongDoanhThu()));
+			lblSoHoaDon.setText(String.valueOf(thongKeBUS.tongSoHoaDon()));
+			lblSoSanPham.setText(String.valueOf(thongKeBUS.tongSanPhamDaBan()));
 
-		model.setRowCount(0);
-		for (int i = 0; i < dsBanChay.length; i++) {
-			model.addRow(new Object[] { i + 1, dsBanChay[i][0], dsBanChay[i][1], dsBanChay[i][2] });
+			model.setRowCount(0);
+			List<Object[]> ds = thongKeBUS.getSanPhamBanChay();
+			for (int i = 0; i < ds.size(); i++) {
+				Object[] dong = ds.get(i);
+				model.addRow(new Object[] { i + 1, dong[0], dong[1], dong[2] });
+			}
+		} catch (SQLException ex) {
+			JOptionPane.showMessageDialog(this, "Lỗi truy vấn cơ sở dữ liệu: " + ex.getMessage());
 		}
 	}
 
