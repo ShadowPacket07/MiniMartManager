@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -36,12 +37,16 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 
 	private NhanVienBUS nhanVienBUS = new NhanVienBUS();
 
-	private JTextField txtMaNV, txtHoTen, txtSDT, txtEmail, txtDiaChi, txtTienLuong, txtNgaySinh;
+	private JTextField txtMaNV, txtHoTen, txtSDT, txtEmail, txtDiaChi, txtTienLuong;
 	private JComboBox<String> cmbGioiTinh;
+	private JComboBox<Integer> cmbNgay, cmbThang, cmbNam;
+
+	private JTextField txtTimKiem;
+	private JButton btnTimKiem;
 
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private JButton btnThem, btnSua, btnXoa, btnLamMoi, btnTimKiem;
+	private JButton btnThem, btnSua, btnXoa, btnLamMoi;
 
 	public NhanVienGUI() {
 		setLayout(new BorderLayout(10, 10));
@@ -50,13 +55,11 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 
 		JPanel pnlForm = new JPanel(new BorderLayout());
 		pnlForm.setBackground(Color.WHITE);
-		pnlForm.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(220, 225, 230), 1),
-				BorderFactory.createTitledBorder(
-						BorderFactory.createEmptyBorder(10, 15, 10, 15),
-						"THÔNG TIN NHÂN VIÊN", 0, 0,
-						new Font("Arial", Font.BOLD, 15),
-						new Color(21, 94, 239))));
+		pnlForm.setBorder(
+				BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(220, 225, 230), 1),
+						BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15),
+								"THÔNG TIN NHÂN VIÊN", 0, 0, new Font("Arial", Font.BOLD, 15),
+								new Color(21, 94, 239))));
 
 		Box b = Box.createVerticalBox();
 		b.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
@@ -86,7 +89,33 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 		b2.add(Box.createHorizontalStrut(20));
 		b2.add(new JLabel("Ngày sinh:"));
 		b2.add(Box.createHorizontalStrut(10));
-		b2.add(txtNgaySinh = new JTextField());
+
+		JPanel pnlNgaySinh = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
+		pnlNgaySinh.setOpaque(false);
+		pnlNgaySinh.add(new JLabel("Ngày:"));
+		cmbNgay = new JComboBox<>();
+		for (int i = 1; i <= 31; i++) {
+			cmbNgay.addItem(i);
+		}
+		pnlNgaySinh.add(cmbNgay);
+
+		pnlNgaySinh.add(new JLabel("Tháng:"));
+		cmbThang = new JComboBox<>();
+		for (int i = 1; i <= 12; i++) {
+			cmbThang.addItem(i);
+		}
+		pnlNgaySinh.add(cmbThang);
+
+		pnlNgaySinh.add(new JLabel("Năm:"));
+		cmbNam = new JComboBox<>();
+		int currentYear = LocalDate.now().getYear();
+		for (int i = currentYear; i >= 1950; i--) {
+			cmbNam.addItem(i);
+		}
+		cmbNam.setSelectedItem(2000);
+		pnlNgaySinh.add(cmbNam);
+
+		b2.add(pnlNgaySinh);
 
 		Box b3 = Box.createHorizontalBox();
 		b3.add(new JLabel("Địa chỉ:"));
@@ -102,7 +131,6 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 		txtHoTen.setMaximumSize(fieldHeight);
 		txtSDT.setMaximumSize(fieldHeight);
 		txtEmail.setMaximumSize(fieldHeight);
-		txtNgaySinh.setMaximumSize(fieldHeight);
 		txtDiaChi.setMaximumSize(fieldHeight);
 		txtTienLuong.setMaximumSize(fieldHeight);
 		cmbGioiTinh.setMaximumSize(fieldHeight);
@@ -125,8 +153,6 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 		b4.add(btnXoa = taoNut("Xóa", new Color(220, 53, 69)));
 		b4.add(Box.createHorizontalStrut(20));
 		b4.add(btnLamMoi = taoNut("Làm Mới", new Color(108, 117, 125)));
-		b4.add(Box.createHorizontalStrut(20));
-		b4.add(btnTimKiem = taoNut("Tìm Kiếm", new Color(255, 153, 0)));
 		b4.add(Box.createHorizontalGlue());
 
 		b.add(b1);
@@ -140,6 +166,29 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 
 		pnlForm.add(b, BorderLayout.CENTER);
 		add(pnlForm, BorderLayout.NORTH);
+
+		JPanel pnlCenter = new JPanel(new BorderLayout(5, 10));
+		pnlCenter.setOpaque(false);
+
+		JPanel pnlSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+		pnlSearch.setBackground(Color.WHITE);
+		pnlSearch.setBorder(
+				BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(220, 225, 230), 1),
+						BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+
+		JLabel lblTim = new JLabel("Tìm kiếm (Mã / Tên):");
+		lblTim.setFont(new Font("Arial", Font.BOLD, 13));
+		pnlSearch.add(lblTim);
+
+		txtTimKiem = new JTextField();
+		txtTimKiem.setPreferredSize(new Dimension(250, 32));
+		pnlSearch.add(txtTimKiem);
+
+		btnTimKiem = taoNut("Tìm Kiếm", new Color(255, 153, 0));
+		btnTimKiem.setPreferredSize(new Dimension(100, 32));
+		pnlSearch.add(btnTimKiem);
+
+		pnlCenter.add(pnlSearch, BorderLayout.NORTH);
 
 		String[] headers = { "Mã NV", "Họ Tên", "Giới Tính", "Ngày Sinh", "SĐT", "Email", "Địa Chỉ", "Tiền Lương" };
 		tableModel = new DefaultTableModel(headers, 0) {
@@ -176,7 +225,9 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setBorder(BorderFactory.createLineBorder(new Color(220, 225, 230)));
-		add(scroll, BorderLayout.CENTER);
+		pnlCenter.add(scroll, BorderLayout.CENTER);
+
+		add(pnlCenter, BorderLayout.CENTER);
 
 		addTableListener();
 		loadData();
@@ -208,16 +259,9 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 	private void loadTable(List<NhanVien> list) {
 		tableModel.setRowCount(0);
 		for (NhanVien nv : list) {
-			tableModel.addRow(new Object[] {
-				nv.getMaNhanVien(),
-				nv.getHoTen(),
-				nv.getGioiTinh(),
-				nv.getNgaySinh() != null ? nv.getNgaySinh().toString() : "",
-				nv.getSoDienThoai(),
-				nv.getEmail(),
-				nv.getDiaChi(),
-				String.format("%,.0f đ", nv.getTienLuong())
-			});
+			tableModel.addRow(new Object[] { nv.getMaNhanVien(), nv.getHoTen(), nv.getGioiTinh(),
+					nv.getNgaySinh() != null ? nv.getNgaySinh().toString() : "", nv.getSoDienThoai(), nv.getEmail(),
+					nv.getDiaChi(), String.format("%,.0f đ", nv.getTienLuong()) });
 		}
 	}
 
@@ -226,17 +270,25 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int row = table.getSelectedRow();
-				if (row < 0) return;
+				if (row < 0) {
+					return;
+				}
 
 				String ma = tableModel.getValueAt(row, 0).toString();
 				try {
 					NhanVien nv = nhanVienBUS.timTheoMa(ma);
-					if (nv == null) return;
+					if (nv == null) {
+						return;
+					}
 
 					txtMaNV.setText(nv.getMaNhanVien());
 					txtHoTen.setText(nv.getHoTen());
 					cmbGioiTinh.setSelectedItem(nv.getGioiTinh());
-					txtNgaySinh.setText(nv.getNgaySinh() != null ? nv.getNgaySinh().toString() : "");
+					if (nv.getNgaySinh() != null) {
+						cmbNgay.setSelectedItem(nv.getNgaySinh().getDayOfMonth());
+						cmbThang.setSelectedItem(nv.getNgaySinh().getMonthValue());
+						cmbNam.setSelectedItem(nv.getNgaySinh().getYear());
+					}
 					txtSDT.setText(nv.getSoDienThoai());
 					txtEmail.setText(nv.getEmail());
 					txtDiaChi.setText(nv.getDiaChi());
@@ -254,7 +306,9 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 
 		if (o == btnThem) {
 			NhanVien nv = layDuLieu();
-			if (nv == null) return;
+			if (nv == null) {
+				return;
+			}
 			try {
 				if (nhanVienBUS.themNhanVien(nv)) {
 					JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
@@ -273,7 +327,9 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 				return;
 			}
 			NhanVien nv = layDuLieu();
-			if (nv == null) return;
+			if (nv == null) {
+				return;
+			}
 			try {
 				if (nhanVienBUS.chinhSuaNhanVien(nv)) {
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
@@ -292,7 +348,8 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần xóa!");
 				return;
 			}
-			int cf = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên [" + ma + "]?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+			int cf = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhân viên [" + ma + "]?", "Xác nhận",
+					JOptionPane.YES_NO_OPTION);
 			if (cf == JOptionPane.YES_OPTION) {
 				try {
 					if (nhanVienBUS.xoaNhanVien(ma)) {
@@ -300,10 +357,12 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 						xoaForm();
 						loadData();
 					} else {
-						JOptionPane.showMessageDialog(this, "Không thể xóa (nhân viên có tài khoản hoặc đang liên kết hóa đơn)!");
+						JOptionPane.showMessageDialog(this,
+								"Không thể xóa (nhân viên có tài khoản hoặc đang liên kết hóa đơn)!");
 					}
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(this, "Lỗi khi xóa: " + e1.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, "Lỗi khi xóa: " + e1.getMessage(), "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 
@@ -312,28 +371,29 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 			loadData();
 
 		} else if (o == btnTimKiem) {
-			String ten = txtHoTen.getText().trim();
-			String ma = txtMaNV.getText().trim();
+			String tuKhoa = txtTimKiem.getText().trim();
+			if (tuKhoa.isEmpty()) {
+				loadData();
+				return;
+			}
 			try {
-				if (!ten.isEmpty()) {
-					loadTable(nhanVienBUS.timKiemTheoTen(ten));
-				} else if (!ma.isEmpty()) {
-					NhanVien nv = nhanVienBUS.timTheoMa(ma);
-					tableModel.setRowCount(0);
-					if (nv != null) {
-						tableModel.addRow(new Object[] {
-							nv.getMaNhanVien(), nv.getHoTen(), nv.getGioiTinh(),
-							nv.getNgaySinh() != null ? nv.getNgaySinh().toString() : "",
-							nv.getSoDienThoai(), nv.getEmail(), nv.getDiaChi(),
-							String.format("%,.0f đ", nv.getTienLuong())
-						});
-					}
+				NhanVien nv = nhanVienBUS.timTheoMa(tuKhoa);
+				if (nv != null) {
+					List<NhanVien> list = new ArrayList<>();
+					list.add(nv);
+					loadTable(list);
 				} else {
-					loadData();
+					List<NhanVien> list = nhanVienBUS.timKiemTheoTen(tuKhoa);
+					if (list.isEmpty()) {
+						JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên nào phù hợp!");
+					}
+					loadTable(list);
 				}
 			} catch (SQLException e1) {
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Lỗi khi tìm kiếm: " + e1.getMessage(), "Lỗi",
+						JOptionPane.ERROR_MESSAGE);
 			}
+
 		}
 	}
 
@@ -342,10 +402,13 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 		txtHoTen.setText("");
 		txtSDT.setText("");
 		txtEmail.setText("");
-		txtNgaySinh.setText("");
 		txtDiaChi.setText("");
 		txtTienLuong.setText("");
 		cmbGioiTinh.setSelectedIndex(0);
+		cmbNgay.setSelectedItem(1);
+		cmbThang.setSelectedItem(1);
+		cmbNam.setSelectedItem(2000);
+		txtTimKiem.setText("");
 		table.clearSelection();
 		txtMaNV.requestFocus();
 	}
@@ -371,15 +434,17 @@ public class NhanVienGUI extends JPanel implements ActionListener {
 			return null;
 		}
 
-		LocalDate ngaySinh = null;
-		String strNgaySinh = txtNgaySinh.getText().trim();
-		if (!strNgaySinh.isEmpty()) {
-			try {
-				ngaySinh = LocalDate.parse(strNgaySinh);
-			} catch (DateTimeParseException ex) {
-				JOptionPane.showMessageDialog(this, "Ngày sinh phải đúng định dạng YYYY-MM-DD!");
-				return null;
-			}
+		int ngay = (int) cmbNgay.getSelectedItem();
+		int thang = (int) cmbThang.getSelectedItem();
+		int nam = (int) cmbNam.getSelectedItem();
+
+		LocalDate ngaySinh;
+		try {
+			ngaySinh = LocalDate.of(nam, thang, ngay);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this,
+					"Ngày tháng năm sinh không hợp lệ (Ví dụ: tháng 2 không có 30, 31 ngày)!");
+			return null;
 		}
 
 		if (!sdt.isEmpty() && !sdt.matches("0\\d{9}")) {
