@@ -20,10 +20,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import entity.TaiKhoan;
+
 public class MainGUI extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
+	private TaiKhoan taiKhoan;
+	private JLabel lblTitle;
+	private JLabel lblAccount;
 	// Màu sắc giao diện
-	private Color sidebarColor = new Color(21, 94, 239);
+	private Color sidebarColor = new Color(255, 131, 40);
 
 	// Các thành phần chính
 	private JPanel pSidebar;
@@ -44,7 +49,8 @@ public class MainGUI extends JFrame implements ActionListener {
 	// 2. Đưa các nút vào mảng để dễ thiết lập chung
 	private JButton[] menuButtons = { btnTrangChu, btnNhanVien, btnSanPham, btnBanHang, btnHoaDon, btnThongKe };
 
-	public MainGUI() {
+	public MainGUI(TaiKhoan taiKhoan) {
+		this.taiKhoan = taiKhoan;
 		// 1. Thiết lập cửa sổ
 		setTitle("MiniMart Manager");
 		setSize(1200, 750);
@@ -104,6 +110,18 @@ public class MainGUI extends JFrame implements ActionListener {
 		btnTrangChu.setBackground(Color.WHITE);
 		btnTrangChu.setForeground(sidebarColor);
 
+		// Phân quyền hiển thị nút chức năng
+		boolean isManager = "Quản lý".equalsIgnoreCase(taiKhoan.getRole());
+		boolean isEmployee = "Nhân viên".equalsIgnoreCase(taiKhoan.getRole());
+
+		btnNhanVien.setVisible(isManager);
+		btnSanPham.setVisible(isManager);
+		btnThongKe.setVisible(isManager);
+
+		if (isEmployee) {
+			btnHoaDon.setText("Tra cứu hóa đơn");
+		}
+
 		// Thêm các nút vào Sidebar
 		pSidebar.add(Box.createVerticalStrut(25));
 
@@ -129,12 +147,12 @@ public class MainGUI extends JFrame implements ActionListener {
 		pHeader.setBorder(new EmptyBorder(15, 25, 15, 25));
 
 		// Tạo tiêu đề trang
-		JLabel lblTitle = new JLabel("Trang chủ");
+		lblTitle = new JLabel("Trang chủ");
 		lblTitle.setFont(new Font("Arial", Font.BOLD, 22));
 		lblTitle.setForeground(new Color(23, 43, 77));
 
 		// Tạo thông tin tài khoản
-		JLabel lblAccount = new JLabel("<html><b>Admin</b><br>Quản trị viên</html>");
+		lblAccount = new JLabel("<html><b>Admin</b><br>Quản trị viên</html>");
 		lblAccount.setFont(new Font("Arial", Font.PLAIN, 13));
 		lblAccount.setForeground(new Color(102, 112, 133));
 

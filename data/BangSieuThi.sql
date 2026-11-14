@@ -1,18 +1,23 @@
 
--- =============================================
+-- =====================================================
 -- DATABASE: QLSieuThi
 -- PROJECT: GonStore
--- =============================================
+-- DBMS: SQL Server
+-- =====================================================
 
-CREATE DATABASE QLSieuThi;
+-- 1. TAO DATABASE
+IF DB_ID(N'QLSieuThi') IS NULL
+BEGIN
+    CREATE DATABASE QLSieuThi;
+END
 GO
 
 USE QLSieuThi;
 GO
 
--- =============================================
--- 1. TAO BANG SAN PHAM
--- =============================================
+-- =====================================================
+-- 2. TAO BANG SAN PHAM
+-- =====================================================
 
 CREATE TABLE SanPham
 (
@@ -24,9 +29,9 @@ CREATE TABLE SanPham
 );
 GO
 
--- =============================================
--- 2. TAO BANG NHAN VIEN
--- =============================================
+-- =====================================================
+-- 3. TAO BANG NHAN VIEN
+-- =====================================================
 
 CREATE TABLE NhanVien
 (
@@ -41,9 +46,9 @@ CREATE TABLE NhanVien
 );
 GO
 
--- =============================================
--- 3. TAO BANG TAI KHOAN
--- =============================================
+-- =====================================================
+-- 4. TAO BANG TAI KHOAN
+-- =====================================================
 
 CREATE TABLE TaiKhoan
 (
@@ -58,9 +63,9 @@ CREATE TABLE TaiKhoan
 );
 GO
 
--- =============================================
--- 4. TAO BANG HOA DON
--- =============================================
+-- =====================================================
+-- 5. TAO BANG HOA DON
+-- =====================================================
 
 CREATE TABLE HoaDon
 (
@@ -75,14 +80,14 @@ CREATE TABLE HoaDon
 );
 GO
 
--- =============================================
--- 5. TAO BANG CHI TIET HOA DON
--- =============================================
+-- =====================================================
+-- 6. TAO BANG CHI TIET HOA DON
+-- =====================================================
 
 CREATE TABLE ChiTietHoaDon
 (
-    maHoaDon NVARCHAR(100),
-    maSanPham NVARCHAR(100),
+    maHoaDon NVARCHAR(100) NOT NULL,
+    maSanPham NVARCHAR(100) NOT NULL,
     soLuong INT NOT NULL CHECK (soLuong > 0),
     giaTien FLOAT NOT NULL CHECK (giaTien > 0),
 
@@ -99,9 +104,9 @@ CREATE TABLE ChiTietHoaDon
 );
 GO
 
--- =============================================
--- 6. THEM DU LIEU SAN PHAM
--- =============================================
+-- =====================================================
+-- 7. THEM DU LIEU SAN PHAM
+-- =====================================================
 
 INSERT INTO SanPham
     (maSanPham, tenSanPham, giaTien, trangThai, anhSanPham)
@@ -123,9 +128,9 @@ VALUES
 ('SP015', N'Mì ly Modern lẩu Thái', 15000, 1, 'imgs/mi_ly_modern_lau_thai.jpg');
 GO
 
--- =============================================
--- 7. THEM DU LIEU NHAN VIEN
--- =============================================
+-- =====================================================
+-- 8. THEM DU LIEU NHAN VIEN
+-- =====================================================
 
 INSERT INTO NhanVien
     (maNhanVien, hoTen, soDienThoai, diaChi, email,
@@ -147,9 +152,9 @@ VALUES
  N'Gò Vấp, HCM', 'hung@gmail.com', 7200000, '1995-12-30', N'Nam');
 GO
 
--- =============================================
--- 8. THEM DU LIEU TAI KHOAN
--- =============================================
+-- =====================================================
+-- 9. THEM DU LIEU TAI KHOAN
+-- =====================================================
 
 INSERT INTO TaiKhoan
     (username, password, role, maNhanVien)
@@ -161,9 +166,9 @@ VALUES
 ('hung12', '123', N'Nhân viên', 'NV005');
 GO
 
--- =============================================
--- 9. THEM DU LIEU HOA DON
--- =============================================
+-- =====================================================
+-- 10. THEM DU LIEU HOA DON
+-- =====================================================
 
 INSERT INTO HoaDon
     (maHoaDon, ngayTao, maNhanVien, tongTien)
@@ -188,22 +193,20 @@ VALUES
 ('HD018', '2026-04-28 19:00:00', 'NV005', 90000),
 ('HD019', '2026-04-28 20:00:00', 'NV002', 32000),
 ('HD020', '2026-04-28 21:00:00', 'NV003', 29000),
-
 ('HD100', '2026-05-01 08:00:00', 'NV002', 75000),
 ('HD102', '2026-05-03 08:15:00', 'NV003', 45000),
 ('HD103', '2026-05-02 08:30:00', 'NV002', 29000);
 GO
 
--- =============================================
--- 10. THEM DU LIEU CHI TIET HOA DON
--- =============================================
+-- =====================================================
+-- 11. THEM DU LIEU CHI TIET HOA DON
+-- =====================================================
 
 INSERT INTO ChiTietHoaDon
     (maHoaDon, maSanPham, soLuong, giaTien)
 VALUES
 ('HD001', 'SP001', 2, 25000),
 ('HD001', 'SP008', 1, 25000),
-
 ('HD002', 'SP004', 1, 45000),
 ('HD003', 'SP002', 1, 29000),
 ('HD004', 'SP003', 3, 32000),
@@ -223,16 +226,15 @@ VALUES
 ('HD018', 'SP009', 3, 30000),
 ('HD019', 'SP003', 1, 32000),
 ('HD020', 'SP002', 1, 29000),
-
 ('HD100', 'SP001', 2, 25000),
 ('HD100', 'SP008', 1, 25000),
 ('HD102', 'SP004', 1, 45000),
 ('HD103', 'SP002', 1, 29000);
 GO
 
--- =============================================
--- 11. KIEM TRA DU LIEU
--- =============================================
+-- =====================================================
+-- 12. KIEM TRA DU LIEU
+-- =====================================================
 
 SELECT * FROM SanPham;
 SELECT * FROM NhanVien;
@@ -241,7 +243,10 @@ SELECT * FROM HoaDon;
 SELECT * FROM ChiTietHoaDon;
 GO
 
--- Kiem tra quan he giua NhanVien va TaiKhoan
+-- =====================================================
+-- 13. KIEM TRA QUAN HE NHAN VIEN - TAI KHOAN
+-- =====================================================
+
 SELECT
     NV.maNhanVien,
     NV.hoTen,
@@ -250,4 +255,27 @@ SELECT
 FROM NhanVien NV
 LEFT JOIN TaiKhoan TK
     ON NV.maNhanVien = TK.maNhanVien;
+GO
+
+-- =====================================================
+-- 14. KIEM TRA CHI TIET HOA DON
+-- =====================================================
+
+SELECT
+    HD.maHoaDon,
+    HD.ngayTao,
+    NV.hoTen AS tenNhanVien,
+    SP.tenSanPham,
+    CTHD.soLuong,
+    CTHD.giaTien,
+    CTHD.soLuong * CTHD.giaTien AS thanhTien,
+    HD.tongTien
+FROM HoaDon HD
+JOIN NhanVien NV
+    ON HD.maNhanVien = NV.maNhanVien
+JOIN ChiTietHoaDon CTHD
+    ON HD.maHoaDon = CTHD.maHoaDon
+JOIN SanPham SP
+    ON CTHD.maSanPham = SP.maSanPham
+ORDER BY HD.ngayTao, HD.maHoaDon;
 GO
