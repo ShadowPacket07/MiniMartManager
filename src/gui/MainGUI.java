@@ -33,15 +33,16 @@ public class MainGUI extends JFrame implements ActionListener {
 	private CardLayout cardLayout;
 
 	// Các nút Menu
-	JButton btnTrangChu = new JButton("Trang chủ");
-	JButton btnNhanVien = new JButton("Quản lý nhân viên");
-	JButton btnSanPham = new JButton("Quản lý sản phẩm");
-	JButton btnBanHang = new JButton("Bán hàng");
-	JButton btnHoaDon = new JButton("Quản lý hóa đơn");
-	JButton btnDangXuat = new JButton("Đăng Xuất");
+	private JButton btnTrangChu = new JButton("Trang chủ");
+	private JButton btnNhanVien = new JButton("Quản lý nhân viên");
+	private JButton btnSanPham = new JButton("Quản lý sản phẩm");
+	private JButton btnBanHang = new JButton("Bán hàng");
+	private JButton btnHoaDon = new JButton("Quản lý hóa đơn");
+	private JButton btnDangXuat = new JButton("Đăng Xuất");
+	private JButton btnThongKe = new JButton("Thống Kê");
 
 	// 2. Đưa các nút vào mảng để dễ thiết lập chung
-	JButton[] menuButtons = { btnTrangChu, btnNhanVien, btnSanPham, btnBanHang, btnHoaDon };
+	private JButton[] menuButtons = { btnTrangChu, btnNhanVien, btnSanPham, btnBanHang, btnHoaDon, btnThongKe };
 
 	public MainGUI() {
 		// 1. Thiết lập cửa sổ
@@ -81,9 +82,6 @@ public class MainGUI extends JFrame implements ActionListener {
 		btnDangXuat.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnDangXuat.setPreferredSize(new Dimension(210, 45));
 		btnDangXuat.setMaximumSize(new Dimension(210, 45));
-
-		// Đưa các nút vào mảng để dễ thiết lập chung
-		JButton[] menuButtons = { btnTrangChu, btnNhanVien, btnSanPham, btnBanHang, btnHoaDon };
 
 		// Thiết lập giao diện chung cho các nút
 		for (JButton btn : menuButtons) {
@@ -151,22 +149,20 @@ public class MainGUI extends JFrame implements ActionListener {
 		pContent = new JPanel(cardLayout);
 
 		// Tạo các màn hình tạm thời
-		JPanel pTrangChu = new JPanel();
-		JPanel pSanPham = new JPanel();
+		TrangChuGUI trangChuGUI = new TrangChuGUI();
+		SanPhamGUI sanPhamGUI = new SanPhamGUI();
 		BanHangGUI banHangGUI = new BanHangGUI();
 		HoaDonGUI hoaDonGUI = new HoaDonGUI();
 		NhanVienGUI nhanVienGUI = new NhanVienGUI();
-
-		// Thiết lập màu nền
-		pTrangChu.setBackground(new Color(243, 246, 252));
-		pSanPham.setBackground(Color.RED);
+		ThongKeGUI thongKeGUI = new ThongKeGUI();
 
 		// Thêm các màn hình vào CardLayout
-		pContent.add(pTrangChu, "TRANG_CHU");
+		pContent.add(trangChuGUI, "TRANG_CHU");
 		pContent.add(nhanVienGUI, "NHAN_VIEN");
-		pContent.add(pSanPham, "SAN_PHAM");
+		pContent.add(sanPhamGUI, "SAN_PHAM");
 		pContent.add(banHangGUI, "BAN_HANG");
 		pContent.add(hoaDonGUI, "HOA_DON");
+		pContent.add(thongKeGUI, "THONG_KE");
 
 		// Đưa Content Panel vào pMain
 		pMain.add(pContent, BorderLayout.CENTER);
@@ -185,6 +181,7 @@ public class MainGUI extends JFrame implements ActionListener {
 		btnBanHang.addActionListener(this);
 		btnHoaDon.addActionListener(this);
 		btnDangXuat.addActionListener(this);
+		btnThongKe.addActionListener(this);
 	}
 
 	@Override
@@ -206,9 +203,9 @@ public class MainGUI extends JFrame implements ActionListener {
 
 		else if (o == btnHoaDon) {
 			cardLayout.show(pContent, "HOA_DON");
-		}
-
-		else if (o == btnDangXuat) {
+		} else if (o == btnThongKe) {
+			cardLayout.show(pContent, "THONG_KE");
+		} else if (o == btnDangXuat) {
 			LoginGUI loginGUI = new LoginGUI();
 			loginGUI.setVisible(true);
 			this.dispose();

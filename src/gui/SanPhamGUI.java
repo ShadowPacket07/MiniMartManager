@@ -111,11 +111,9 @@ public class SanPhamGUI extends JPanel implements ActionListener, MouseListener 
 	private JPanel taoPanelEditor() {
 		JPanel pEditor = new JPanel(new BorderLayout(5, 5));
 		pEditor.setBackground(Color.WHITE);
-		pEditor.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(new Color(203, 213, 225)),
-				"Thông tin sản phẩm",
-				TitledBorder.LEFT, TitledBorder.TOP,
-				new Font("Arial", Font.BOLD, 13), textColor));
+		pEditor.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(203, 213, 225)),
+				"Thông tin sản phẩm", TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 13),
+				textColor));
 
 		Box b, b1, b2, b3, b4, b5;
 		b = Box.createVerticalBox();
@@ -216,7 +214,8 @@ public class SanPhamGUI extends JPanel implements ActionListener, MouseListener 
 		btnTim.setForeground(Color.WHITE);
 
 		lblLocLoai = new JLabel("Lọc theo loại:");
-		String[] locLoaiList = { "Tất cả", "Thực phẩm", "Nước giải khát", "Bánh kẹo", "Sữa các loại", "Đồ gia dụng", "Khác" };
+		String[] locLoaiList = { "Tất cả", "Thực phẩm", "Nước giải khát", "Bánh kẹo", "Sữa các loại", "Đồ gia dụng",
+				"Khác" };
 		cboLocLoai = new JComboBox<>(locLoaiList);
 
 		btnTatCa = new JButton("Tất cả");
@@ -262,11 +261,9 @@ public class SanPhamGUI extends JPanel implements ActionListener, MouseListener 
 	private JPanel taoPanelBangSanPham() {
 		JPanel pPanel = new JPanel(new BorderLayout(5, 5));
 		pPanel.setBackground(Color.WHITE);
-		pPanel.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(new Color(203, 213, 225)),
-				"Danh sách sản phẩm",
-				TitledBorder.LEFT, TitledBorder.TOP,
-				new Font("Arial", Font.BOLD, 13), textColor));
+		pPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(203, 213, 225)),
+				"Danh sách sản phẩm", TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 13),
+				textColor));
 
 		String[] cols = { "Mã sản phẩm", "Tên sản phẩm", "Loại sản phẩm", "Đơn giá", "Số lượng tồn", "Trạng thái" };
 		tableModel = new DefaultTableModel(cols, 0) {
@@ -326,14 +323,8 @@ public class SanPhamGUI extends JPanel implements ActionListener, MouseListener 
 	public void capNhatDuLieu() {
 		tableModel.setRowCount(0);
 		for (SanPham sp : dsSanPham) {
-			tableModel.addRow(new Object[] {
-					sp.getMaSP(),
-					sp.getTenSP(),
-					sp.getLoaiSP(),
-					df.format(sp.getDonGia()),
-					sp.getSoLuongTon(),
-					sp.isTrangThai() ? "Đang kinh doanh" : "Ngừng kinh doanh"
-			});
+			tableModel.addRow(new Object[] { sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), df.format(sp.getDonGia()),
+					sp.getSoLuongTon(), sp.isTrangThai() ? "Đang kinh doanh" : "Ngừng kinh doanh" });
 		}
 	}
 
@@ -490,14 +481,8 @@ public class SanPhamGUI extends JPanel implements ActionListener, MouseListener 
 		}
 
 		dsSanPham.add(sp);
-		tableModel.addRow(new Object[] {
-				sp.getMaSP(),
-				sp.getTenSP(),
-				sp.getLoaiSP(),
-				df.format(sp.getDonGia()),
-				sp.getSoLuongTon(),
-				sp.isTrangThai() ? "Đang kinh doanh" : "Ngừng kinh doanh"
-		});
+		tableModel.addRow(new Object[] { sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), df.format(sp.getDonGia()),
+				sp.getSoLuongTon(), sp.isTrangThai() ? "Đang kinh doanh" : "Ngừng kinh doanh" });
 
 		txtMess.setText("Thêm thành công sản phẩm: " + sp.getMaSP());
 		clearTextFields();
@@ -594,14 +579,8 @@ public class SanPhamGUI extends JPanel implements ActionListener, MouseListener 
 			boolean khopLoai = loaiLoc.equals("Tất cả") || sp.getLoaiSP().equalsIgnoreCase(loaiLoc);
 
 			if (khopTuKhoa && khopLoai) {
-				tableModel.addRow(new Object[] {
-						sp.getMaSP(),
-						sp.getTenSP(),
-						sp.getLoaiSP(),
-						df.format(sp.getDonGia()),
-						sp.getSoLuongTon(),
-						sp.isTrangThai() ? "Đang kinh doanh" : "Ngừng kinh doanh"
-				});
+				tableModel.addRow(new Object[] { sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), df.format(sp.getDonGia()),
+						sp.getSoLuongTon(), sp.isTrangThai() ? "Đang kinh doanh" : "Ngừng kinh doanh" });
 				dem++;
 			}
 		}
@@ -616,16 +595,20 @@ public class SanPhamGUI extends JPanel implements ActionListener, MouseListener 
 	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
