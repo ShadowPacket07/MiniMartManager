@@ -14,18 +14,18 @@ public class SanPhamBUS {
 	}
 
 	public List<SanPham> getAllSanPham() {
-		return sanPhamDAO.getAllSanPham();
+		return sanPhamDAO.getAll();
 	}
 
 	public SanPham getSanPhamTheoMa(String maSP) {
 		if (maSP == null || maSP.trim().isEmpty()) {
 			return null;
 		}
-		return sanPhamDAO.getSanPhamTheoMa(maSP.trim());
+		return sanPhamDAO.getById(maSP.trim());
 	}
 
 	public List<SanPham> getSanPhamDangKinhDoanh() {
-		List<SanPham> ds = sanPhamDAO.getAllSanPham();
+		List<SanPham> ds = sanPhamDAO.getAll();
 		List<SanPham> ketQua = new ArrayList<>();
 		if (ds != null) {
 			for (SanPham sp : ds) {
@@ -42,7 +42,7 @@ public class SanPhamBUS {
 			return getAllSanPham();
 		}
 		String tuKhoaLower = tuKhoa.trim().toLowerCase();
-		List<SanPham> ds = sanPhamDAO.getAllSanPham();
+		List<SanPham> ds = sanPhamDAO.getAll();
 		List<SanPham> ketQua = new ArrayList<>();
 		if (ds != null) {
 			for (SanPham sp : ds) {
@@ -94,7 +94,7 @@ public class SanPhamBUS {
 		if (getSanPhamTheoMa(sp.getMaSP()) != null) {
 			throw new IllegalArgumentException("Mã sản phẩm " + sp.getMaSP() + " đã tồn tại trong hệ thống");
 		}
-		return sanPhamDAO.themSanPham(sp);
+		return sanPhamDAO.them(sp);
 	}
 
 	public boolean capNhatSanPham(SanPham sp) {
@@ -111,7 +111,7 @@ public class SanPhamBUS {
 		if (sp.getSoLuongTon() < 0) {
 			throw new IllegalArgumentException("Số lượng tồn không được âm");
 		}
-		return sanPhamDAO.capNhatSanPham(sp);
+		return sanPhamDAO.capNhat(sp);
 	}
 
 	public boolean ngungKinhDoanh(String maSP) {
@@ -119,8 +119,7 @@ public class SanPhamBUS {
 		if (sp == null) {
 			throw new IllegalArgumentException("Không tìm thấy sản phẩm có mã: " + maSP);
 		}
-		sp.setTrangThai(false);
-		return sanPhamDAO.capNhatSanPham(sp);
+		return sanPhamDAO.ngungKinhDoanh(maSP);
 	}
 
 	public boolean capNhatTonKhoSauKhiBan(String maSP, int soLuongBan) {
@@ -130,5 +129,9 @@ public class SanPhamBUS {
 		SanPham sp = getSanPhamTheoMa(maSP);
 		sp.capNhatTonKho(soLuongBan);
 		return sanPhamDAO.capNhatSoLuongTon(maSP, sp.getSoLuongTon());
+	}
+
+	public boolean giamTonKho(String maSP, int soLuongBan) {
+		return capNhatTonKhoSauKhiBan(maSP, soLuongBan);
 	}
 }

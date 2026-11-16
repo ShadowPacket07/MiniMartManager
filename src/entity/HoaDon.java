@@ -10,11 +10,14 @@ public class HoaDon {
 	private LocalDateTime ngayLap;
 	private NhanVien nhanVien;
 	private double tienKhachDua;
+	private double tongTien;
 	private List<ChiTietHoaDon> dsChiTiet;
 
 	public HoaDon() {
+		super();
 		this.ngayLap = LocalDateTime.now();
 		this.dsChiTiet = new ArrayList<>();
+		this.tongTien = 0.0;
 	}
 
 	public HoaDon(String maHD) {
@@ -30,13 +33,19 @@ public class HoaDon {
 		setTienKhachDua(tienKhachDua);
 	}
 
+	public HoaDon(String maHD, LocalDateTime ngayLap, NhanVien nhanVien, double tienKhachDua, double tongTien) {
+		this(maHD, ngayLap, nhanVien, tienKhachDua);
+		setTongTien(tongTien);
+	}
+
 	public HoaDon(String maHD, LocalDateTime ngayLap, NhanVien nhanVien, double tienKhachDua,
 			List<ChiTietHoaDon> dsChiTiet) {
-		this.maHD = maHD;
-		this.ngayLap = ngayLap;
-		this.nhanVien = nhanVien;
-		this.tienKhachDua = tienKhachDua;
+		super();
+		setMaHD(maHD);
+		setNgayLap(ngayLap);
+		setNhanVien(nhanVien);
 		setDsChiTiet(dsChiTiet);
+		setTienKhachDua(tienKhachDua);
 	}
 
 	public String getMaHD() {
@@ -108,42 +117,50 @@ public class HoaDon {
 	}
 
 	public double getTongTien() {
-		return tinhTongTien();
+		if (dsChiTiet != null && !dsChiTiet.isEmpty()) {
+			return tinhTongTien();
+		}
+		return tongTien;
+	}
+
+	public void setTongTien(double tongTien) {
+		if (tongTien < 0) {
+			throw new IllegalArgumentException("Tổng tiền không được âm");
+		}
+		this.tongTien = tongTien;
 	}
 
 	public double tinhTongTien() {
-		double tong = 0;
-		if (dsChiTiet != null) {
+		if (dsChiTiet != null && !dsChiTiet.isEmpty()) {
+			double tong = 0;
 			for (ChiTietHoaDon ct : dsChiTiet) {
 				if (ct != null) {
 					tong += ct.tinhThanhTien();
 				}
 			}
+			this.tongTien = tong;
+			return tong;
 		}
-		return tong;
+		return this.tongTien;
 	}
 
 	public double tinhTienThua() {
-		double tienThua = tienKhachDua - tinhTongTien();
+		double tienThua = tienKhachDua - getTongTien();
 		return tienThua >= 0 ? tienThua : 0.0;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(maHD);
 	}
-
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		HoaDon other = (HoaDon) obj;
 		return Objects.equals(maHD, other.maHD);
 	}
@@ -153,5 +170,4 @@ public class HoaDon {
 		return "HoaDon [maHD=" + maHD + ", ngayLap=" + ngayLap + ", nhanVien=" + nhanVien + ", tienKhachDua="
 				+ tienKhachDua + ", dsChiTiet=" + dsChiTiet + "]";
 	}
-
 }
