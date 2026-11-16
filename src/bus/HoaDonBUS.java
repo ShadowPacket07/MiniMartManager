@@ -20,16 +20,16 @@ public class HoaDonBUS {
 	}
 
 	public List<HoaDon> getAllHoaDon() {
-		return hoaDonDAO.getAllHoaDon();
+		return hoaDonDAO.getAll();
 	}
 
 	public HoaDon getHoaDonTheoMa(String maHD) {
 		if (maHD == null || maHD.trim().isEmpty()) {
 			return null;
 		}
-		HoaDon hd = hoaDonDAO.getHoaDonTheoMa(maHD.trim());
+		HoaDon hd = hoaDonDAO.getById(maHD.trim());
 		if (hd != null) {
-			List<ChiTietHoaDon> dsChiTiet = chiTietHoaDonDAO.getChiTietTheoMaHD(hd.getMaHD());
+			List<ChiTietHoaDon> dsChiTiet = chiTietHoaDonDAO.getByMaHD(hd.getMaHD());
 			if (dsChiTiet != null) {
 				hd.setDsChiTiet(dsChiTiet);
 			}
@@ -49,7 +49,7 @@ public class HoaDonBUS {
 	}
 
 	public String taoMaHDTuDong() {
-		List<HoaDon> ds = hoaDonDAO.getAllHoaDon();
+		List<HoaDon> ds = hoaDonDAO.getAll();
 		if (ds == null || ds.isEmpty()) {
 			return "HD001";
 		}
@@ -75,8 +75,13 @@ public class HoaDonBUS {
 		if (hd == null) {
 			throw new IllegalArgumentException("Hóa đơn không được để trống");
 		}
-		if (hd.getNhanVien() == null) {
-			throw new IllegalArgumentException("Nhân viên lập hóa đơn không được rỗng");
+		if (hd.getNhanVien() == null || hd.getNhanVien().getMaNV() == null || hd.getNhanVien().getMaNV().trim().isEmpty()) {
+			entity.NhanVien nvHienTai = util.Session.getNhanVienHienTai();
+			if (nvHienTai != null) {
+				hd.setNhanVien(nvHienTai);
+			} else {
+				throw new IllegalArgumentException("Chưa xác định nhân viên lập hóa đơn. Vui lòng đăng nhập!");
+			}
 		}
 		List<ChiTietHoaDon> dsChiTiet = hd.getDsChiTiet();
 		if (dsChiTiet == null || dsChiTiet.isEmpty()) {
@@ -114,17 +119,8 @@ public class HoaDonBUS {
 			hd.setNgayLap(LocalDateTime.now());
 		}
 
-		boolean themHDOk = hoaDonDAO.themHoaDon(hd);
-		if (!themHDOk) {
-			return false;
-		}
-
-		for (ChiTietHoaDon ct : dsChiTiet) {
-			ct.setHoaDon(hd);
-			chiTietHoaDonDAO.themChiTietHoaDon(ct);
-			sanPhamBUS.capNhatTonKhoSauKhiBan(ct.getSanPham().getMaSP(), ct.getSoLuong());
-		}
-		return true;
+		// Gọi hàm lưu hóa đơn, chi tiết và trừ kho bằng Transaction
+		return hoaDonDAO.luuHoaDonVaChiTiet(hd);
 	}
 
 	public double tinhTienThua(HoaDon hd) {
@@ -132,5 +128,22 @@ public class HoaDonBUS {
 			return 0.0;
 		}
 		return hd.tinhTienThua();
+	}
+
+	// Các phương thức thống kê số liệu
+	public double getTongDoanhThu() {
+		return hoaDonDAO.getTongDoanhThu();
+	}
+
+	public int getTongSoDon() {
+		return hoaDonDAO.getTongSoDon();
+	}
+
+	public int getTongSoLuongBan() {
+		return hoaDonDAO.getTongSoLuongBan();
+	}
+
+	public List<Object[]> getTop5BanChay() {
+		return hoaDonDAO.getTop5BanChay();
 	}
 }

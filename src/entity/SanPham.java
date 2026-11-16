@@ -9,8 +9,10 @@ public class SanPham {
 	private double donGia;
 	private int soLuongTon;
 	private boolean trangThai;
+	private String hinhAnh;
 
 	public SanPham() {
+		super();
 		this.trangThai = true;
 		this.soLuongTon = 0;
 		this.donGia = 0.0;
@@ -22,12 +24,19 @@ public class SanPham {
 	}
 
 	public SanPham(String maSP, String tenSP, String loaiSP, double donGia, int soLuongTon, boolean trangThai) {
+		this(maSP, tenSP, loaiSP, donGia, soLuongTon, trangThai, null);
+	}
+
+	public SanPham(String maSP, String tenSP, String loaiSP, double donGia, int soLuongTon, boolean trangThai,
+			String hinhAnh) {
+		super();
 		setMaSP(maSP);
 		setTenSP(tenSP);
 		setLoaiSP(loaiSP);
 		setDonGia(donGia);
 		setSoLuongTon(soLuongTon);
 		setTrangThai(trangThai);
+		setHinhAnh(hinhAnh);
 	}
 
 	public String getMaSP() {
@@ -97,6 +106,14 @@ public class SanPham {
 		this.trangThai = trangThai;
 	}
 
+	public String getHinhAnh() {
+		return hinhAnh;
+	}
+
+	public void setHinhAnh(String hinhAnh) {
+		this.hinhAnh = hinhAnh;
+	}
+
 	public void capNhatTonKho(int slBan) {
 		if (slBan <= 0) {
 			throw new IllegalArgumentException("Số lượng bán phải > 0");
@@ -111,25 +128,20 @@ public class SanPham {
 	public int hashCode() {
 		return Objects.hash(maSP);
 	}
-
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		SanPham other = (SanPham) obj;
 		return Objects.equals(maSP, other.maSP);
 	}
-
 	@Override
 	public String toString() {
 		return "SanPham [maSP=" + maSP + ", tenSP=" + tenSP + ", loaiSP=" + loaiSP + ", donGia=" + donGia
-				+ ", soLuongTon=" + soLuongTon + ", trangThai=" + trangThai + "]";
+				+ ", soLuongTon=" + soLuongTon + ", trangThai=" + trangThai + ", hinhAnh=" + hinhAnh + "]";
 	}
 }

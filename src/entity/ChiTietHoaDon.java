@@ -9,39 +9,39 @@ public class ChiTietHoaDon {
 	private double donGia;
 
 	public ChiTietHoaDon() {
+		super();
 		this.soLuong = 1;
 		this.donGia = 0.0;
 	}
 
 	public ChiTietHoaDon(SanPham sanPham, int soLuong, double donGia) {
 		this();
-		setSanPham(sanPham);
 		setSoLuong(soLuong);
+		setSanPham(sanPham);
 		setDonGia(donGia);
 	}
 
 	public ChiTietHoaDon(HoaDon hoaDon, SanPham sanPham, int soLuong, double donGia) {
-		this.sanPham = sanPham;
-		this.soLuong = soLuong;
-		this.donGia = donGia;
+		super();
 		setHoaDon(hoaDon);
+		setSoLuong(soLuong);
+		setSanPham(sanPham);
+		setDonGia(donGia);
 	}
 
 	public HoaDon getHoaDon() {
 		return hoaDon;
 	}
-
 	public void setHoaDon(HoaDon hoaDon) {
 		if (hoaDon == null) {
 			throw new IllegalArgumentException("Hóa đơn không được rỗng");
 		}
 		this.hoaDon = hoaDon;
 	}
-
+	
 	public SanPham getSanPham() {
 		return sanPham;
 	}
-
 	public void setSanPham(SanPham sanPham) {
 		if (sanPham == null) {
 			throw new IllegalArgumentException("Sản phẩm không được rỗng");
@@ -52,10 +52,12 @@ public class ChiTietHoaDon {
 	public int getSoLuong() {
 		return soLuong;
 	}
-
 	public void setSoLuong(int soLuong) {
 		if (soLuong <= 0) {
 			throw new IllegalArgumentException("Số lượng phải > 0");
+		}
+		if (this.sanPham != null && soLuong > this.sanPham.getSoLuongTon()) {
+			throw new IllegalArgumentException("Số lượng không được vượt quá tồn kho");
 		}
 		this.soLuong = soLuong;
 	}
@@ -63,7 +65,6 @@ public class ChiTietHoaDon {
 	public double getDonGia() {
 		return donGia;
 	}
-
 	public void setDonGia(double donGia) {
 		if (donGia <= 0) {
 			throw new IllegalArgumentException("Đơn giá phải > 0");
@@ -74,7 +75,6 @@ public class ChiTietHoaDon {
 	public double getThanhTien() {
 		return tinhThanhTien();
 	}
-
 	public double tinhThanhTien() {
 		return soLuong * donGia;
 	}
@@ -83,18 +83,14 @@ public class ChiTietHoaDon {
 	public int hashCode() {
 		return Objects.hash(hoaDon, sanPham);
 	}
-
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) {
+		if (this == obj)
 			return true;
-		}
-		if (obj == null) {
+		if (obj == null)
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (getClass() != obj.getClass())
 			return false;
-		}
 		ChiTietHoaDon other = (ChiTietHoaDon) obj;
 		return Objects.equals(hoaDon, other.hoaDon) && Objects.equals(sanPham, other.sanPham);
 	}
