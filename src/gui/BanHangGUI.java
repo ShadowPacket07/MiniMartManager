@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -16,6 +17,8 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -58,7 +61,8 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 	private SanPhamBUS sanPhamBUS = new SanPhamBUS();
 	private HoaDonBUS hoaDonBUS = new HoaDonBUS();
 
-	private DecimalFormat df = new DecimalFormat("#,###", java.text.DecimalFormatSymbols.getInstance(java.util.Locale.US));
+	private DecimalFormat df = new DecimalFormat("#,###",
+			java.text.DecimalFormatSymbols.getInstance(java.util.Locale.US));
 	private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 	private double tongTienHoaDon = 0;
 
@@ -115,20 +119,35 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 		pTimSP.add(btnThemGio);
 		pSP.add(pTimSP, BorderLayout.NORTH);
 
-		String[] colsSP = { "Mã SP", "Tên Sản Phẩm", "Loại", "Đơn Giá", "Tồn Kho" };
+		String[] colsSP = { "Ảnh", "Mã SP", "Tên Sản Phẩm", "Loại", "Đơn Giá", "Tồn Kho", "Thêm" };
 		modelSanPham = new DefaultTableModel(colsSP, 0) {
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
+
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				return columnIndex == 0 ? Icon.class : Object.class; // cột 0 hiển thị ảnh
+			}
 		};
 		tblSanPham = new JTable(modelSanPham);
-		dinhDangCotSo(tblSanPham, 3, 4);
+		tblSanPham.setRowHeight(56); // hàng cao hơn để vừa ảnh
+		dinhDangCotSo(tblSanPham, 4, 5); // Đơn giá, Tồn kho (dịch 1 cột vì thêm cột Ảnh)
+
+		// Cột "Thêm": chữ + to, màu xanh lá, căn giữa
+		DefaultTableCellRenderer rCong = new DefaultTableCellRenderer();
+		rCong.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+		rCong.setForeground(new Color(22, 163, 74));
+		rCong.setFont(new Font("Times New Roman", Font.BOLD, 24));
+		tblSanPham.getColumnModel().getColumn(6).setCellRenderer(rCong);
+		tblSanPham.getColumnModel().getColumn(6).setMaxWidth(50);
 
 		JScrollPane scrSP = new JScrollPane(tblSanPham);
-		scrSP.setPreferredSize(new Dimension(650, 180));
+		scrSP.setPreferredSize(new Dimension(180, 240));
 		pSP.add(scrSP, BorderLayout.CENTER);
 		pTrai.add(pSP, BorderLayout.NORTH);
 
@@ -302,6 +321,40 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 		taoHoaDonMoi();
 	}
 
+	private void themDongSanPham(SanPham sp) {
+		ImageIcon icon = taiAnh(sp.getHinhAnh());
+
+		Object[] row = { icon, sp.getMaSP(), sp.getTenSP(), sp.getLoaiSP(), sp.getDonGia(), sp.getSoLuongTon(), "+" // Cột
+																													// nút
+																													// thêm
+		};
+
+		modelSanPham.addRow(row);
+	}
+	// Đọc ảnh từ đường dẫn trong CSDL (vd: imgs/omachi.jpg) và thu nhỏ 50x50
+
+	private ImageIcon taiAnh(String tenFile) {
+		if (tenFile == null || tenFile.trim().isEmpty()) {
+			return null;
+		}
+
+		// Lấy đường dẫn thư mục gốc của project
+		String duongDan = System.getProperty("user.dir") + "/imgs/" + tenFile;
+
+		ImageIcon icon = new ImageIcon(duongDan);
+
+		// Kiểm tra ảnh có tồn tại hay không
+		if (icon.getIconWidth() <= 0) {
+			System.out.println("Không tìm thấy ảnh: " + duongDan);
+			return null;
+		}
+
+		// Thu nhỏ ảnh về kích thước 50x50
+		Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+
+		return new ImageIcon(img);
+	}
+
 	private void dinhDangCotSo(JTable t, int... cols) {
 		DefaultTableCellRenderer r = new DefaultTableCellRenderer();
 		r.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
@@ -334,13 +387,7 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 		List<SanPham> ds = sanPhamBUS.getSanPhamDangKinhDoanh();
 		if (ds != null) {
 			for (SanPham sp : ds) {
-				modelSanPham.addRow(new Object[] {
-						sp.getMaSP(),
-						sp.getTenSP(),
-						sp.getLoaiSP(),
-						df.format(sp.getDonGia()),
-						sp.getSoLuongTon()
-				});
+				themDongSanPham(sp);
 			}
 		}
 	}
@@ -385,13 +432,7 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 			if (ds != null) {
 				for (SanPham sp : ds) {
 					if (sp.isTrangThai()) {
-						modelSanPham.addRow(new Object[] {
-								sp.getMaSP(),
-								sp.getTenSP(),
-								sp.getLoaiSP(),
-								df.format(sp.getDonGia()),
-								sp.getSoLuongTon()
-						});
+						themDongSanPham(sp);
 					}
 				}
 			}
@@ -416,7 +457,7 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 			}
 
 			int slMua = Integer.parseInt(slStr);
-			String maSP = modelSanPham.getValueAt(row, 0).toString();
+			String maSP = modelSanPham.getValueAt(row, 1).toString();
 			SanPham sp = sanPhamBUS.getSanPhamTheoMa(maSP);
 			if (sp == null) {
 				return;
@@ -446,13 +487,8 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 							"Số lượng mua (" + slMua + ") vượt quá tồn kho (" + sp.getSoLuongTon() + ")!");
 					return;
 				}
-				modelGioHang.addRow(new Object[] {
-						sp.getMaSP(),
-						sp.getTenSP(),
-						df.format(sp.getDonGia()),
-						slMua,
-						df.format(slMua * sp.getDonGia())
-				});
+				modelGioHang.addRow(new Object[] { sp.getMaSP(), sp.getTenSP(), df.format(sp.getDonGia()), slMua,
+						df.format(slMua * sp.getDonGia()) });
 			}
 
 			txtSLMua.setText("1");
@@ -470,8 +506,8 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 				return;
 			}
 			int slCu = Integer.parseInt(modelGioHang.getValueAt(row, 3).toString());
-			String input = JOptionPane.showInputDialog(this,
-					"Nhập số lượng mới cho sản phẩm [" + sp.getTenSP() + "]:", String.valueOf(slCu));
+			String input = JOptionPane.showInputDialog(this, "Nhập số lượng mới cho sản phẩm [" + sp.getTenSP() + "]:",
+					String.valueOf(slCu));
 			if (input == null) {
 				return;
 			}
@@ -500,8 +536,9 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 			tinhTongTien();
 
 		} else if (o.equals(btnXoaRongGio)) {
-			if (modelGioHang.getRowCount() > 0 && JOptionPane.showConfirmDialog(this,
-					"Bạn có muốn xóa toàn bộ giỏ hàng?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+			if (modelGioHang.getRowCount() > 0
+					&& JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa toàn bộ giỏ hàng?", "Xác nhận",
+							JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 				modelGioHang.setRowCount(0);
 				tinhTongTien();
 			}
@@ -548,7 +585,8 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 				String maSP = modelGioHang.getValueAt(i, 0).toString();
 				SanPham sp = sanPhamBUS.getSanPhamTheoMa(maSP);
 				int sl = Integer.parseInt(modelGioHang.getValueAt(i, 3).toString());
-				double donGia = Double.parseDouble(modelGioHang.getValueAt(i, 2).toString().replace(",", "").replace(".", ""));
+				double donGia = Double
+						.parseDouble(modelGioHang.getValueAt(i, 2).toString().replace(",", "").replace(".", ""));
 
 				ChiTietHoaDon ct = new ChiTietHoaDon(hd, sp, sl, donGia);
 				dsCT.add(ct);
@@ -558,9 +596,9 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 			try {
 				if (hoaDonBUS.thanhToan(hd)) {
 					JOptionPane.showMessageDialog(this,
-							"Thanh toán thành công hóa đơn " + hd.getMaHD() + "!\n"
-									+ "Tổng tiền: " + df.format(tongTienHoaDon) + " VNĐ\n"
-									+ "Tiền thừa: " + txtTienThua.getText() + " VNĐ");
+							"Thanh toán thành công hóa đơn " + hd.getMaHD() + "!\n" + "Tổng tiền: "
+									+ df.format(tongTienHoaDon) + " VNĐ\n" + "Tiền thừa: " + txtTienThua.getText()
+									+ " VNĐ");
 					capNhatBangSanPham();
 					taoHoaDonMoi();
 				} else {
@@ -576,18 +614,28 @@ public class BanHangGUI extends JPanel implements ActionListener, MouseListener 
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {}
+	public void mouseClicked(MouseEvent e) {
+		int row = tblSanPham.rowAtPoint(e.getPoint());
+		int col = tblSanPham.columnAtPoint(e.getPoint());
+		if (row >= 0 && col == 6) { // cột "Thêm"
+			tblSanPham.setRowSelectionInterval(row, row);
+			btnThemGio.doClick(); // dùng lại logic có sẵn của nút "+ Thêm vào giỏ"
+		}
+	}
 
 	@Override
-	public void mousePressed(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {}
+	public void mouseEntered(MouseEvent e) {
+	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {
+	}
 }
-
