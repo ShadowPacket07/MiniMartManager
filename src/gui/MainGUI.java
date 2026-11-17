@@ -170,7 +170,8 @@ public class MainGUI extends JFrame implements ActionListener {
 
 		String tenHienThi = Session.getTenNguoiDung();
 		String vaiTroStr = isManager ? "Quản lý" : "Nhân viên bán hàng";
-		lblAccount = new JLabel("<html><div style='text-align: right;'><b>" + tenHienThi + "</b><br><span style='color: gray;'>" + vaiTroStr + "</span></div></html>");
+		lblAccount = new JLabel("<html><div style='text-align: right;'><b>" + tenHienThi
+				+ "</b><br><span style='color: gray;'>" + vaiTroStr + "</span></div></html>");
 		lblAccount.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 
 		pHeader.add(lblTitle, BorderLayout.WEST);
@@ -250,8 +251,8 @@ public class MainGUI extends JFrame implements ActionListener {
 			thongKeGUI.capNhatThongKe();
 			cardLayout.show(pContent, "THONG_KE");
 		} else if (o == btnDangXuat) {
-			int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn đăng xuất?",
-					"Đăng xuất", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn đăng xuất?", "Đăng xuất",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if (confirm == JOptionPane.YES_OPTION) {
 				Session.clear();
 				new LoginGUI().setVisible(true);
@@ -260,4 +261,3 @@ public class MainGUI extends JFrame implements ActionListener {
 		}
 	}
 }
-
