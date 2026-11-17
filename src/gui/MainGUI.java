@@ -182,7 +182,7 @@ public class MainGUI extends JFrame implements ActionListener {
 		cardLayout = new CardLayout();
 		pContent = new JPanel(cardLayout);
 
-		trangChuGUI = new TrangChuGUI();
+		trangChuGUI = new TrangChuGUI(this);
 		sanPhamGUI = new SanPhamGUI();
 		banHangGUI = new BanHangGUI();
 		hoaDonGUI = new HoaDonGUI();
@@ -224,11 +224,29 @@ public class MainGUI extends JFrame implements ActionListener {
 		lblTitle.setText(tieuDe);
 	}
 
+	// Các hàm để Trang chủ chuyển sang màn hình khác (giống bấm nút trên sidebar)
+	public void moBanHang() {
+		btnBanHang.doClick();
+	}
+
+	public void moHoaDon() {
+		btnHoaDon.doClick();
+	}
+
+	public void moSanPham() {
+		btnSanPham.doClick();
+	}
+
+	public void moThongKe() {
+		btnThongKe.doClick();
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		if (o == btnTrangChu) {
 			chonNut(btnTrangChu, "Trang chủ");
+			trangChuGUI.taiDuLieu();
 			cardLayout.show(pContent, "TRANG_CHU");
 		} else if (o == btnNhanVien) {
 			chonNut(btnNhanVien, "Quản lý nhân viên");
